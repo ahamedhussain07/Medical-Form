@@ -2,12 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { submitFormData } from "../api/questionAPI";
-import {
-  updateAnswer,
-  skipNextQuestion,
-  nextPage,
-  clearData,
-} from "../redux/formSlice";
+import { updateAnswer, skipNextQuestion, nextPage } from "../redux/formSlice";
 import CustomRadio from "./CustomRadio";
 
 const QuestionForm = ({ question, onPrevious, isLastPage }) => {
@@ -82,7 +77,7 @@ const QuestionForm = ({ question, onPrevious, isLastPage }) => {
       await submitFormData(data);
 
       alert("Form Submitted");
-      dispatch(clearData());
+      window.location.reload();
     } catch (error) {
       alert(error.message);
     }
@@ -90,7 +85,7 @@ const QuestionForm = ({ question, onPrevious, isLastPage }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="fs-5 text-light fw-semibold">
+      <div className="fs-5 text-light fw-semibold mb-1">
         {question.question_text}
       </div>
       <div className="ms-1">
