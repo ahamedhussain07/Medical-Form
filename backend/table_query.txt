@@ -1,0 +1,54 @@
+CREATE DATABASE medical_form;
+USE medical_form;
+
+CREATE TABLE questions (
+    question_id INT AUTO_INCREMENT PRIMARY KEY,
+    question_text TEXT NOT NULL,
+    has_other_options BOOLEAN DEFAULT FALSE,
+    positive_response ENUM('yes', 'no') DEFAULT 'no',
+    negative_response ENUM('yes', 'no') DEFAULT 'no',
+    triggers_next_question ENUM('yes', 'no', 'null') DEFAULT 'null',
+    next_question_id INT DEFAULT NULL,
+    FOREIGN KEY (next_question_id) REFERENCES questions(question_id)
+);
+
+CREATE TABLE averages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    min_positive_responses INT NOT NULL,
+    max_positive_responses INT NOT NULL,
+    result VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NULL,
+    gender ENUM('Male', 'Female', 'Other') NULL,
+    mobile_number VARCHAR(15) NULL,
+    email VARCHAR(255) NULL,
+    age INT NULL,
+    blood_group ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NULL,
+    height DECIMAL(5,2) NULL, -- Height in centimeters (e.g., 170.50)
+    weight DECIMAL(5,2) NULL, -- Weight in kilograms (e.g., 65.75)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE responses (
+    response_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    average_value VARCHAR(255), -- Stores the average response value
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE response_item (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    response_id INT NOT NULL,
+    question_id INT NOT NULL,
+    selected_answer ENUM('yes', 'no', 'other') NULL, -- Stores the user's answer
+    other_response TEXT NULL, -- Stores additional input if 'other' is selected
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (response_id) REFERENCES responses(response_id),
+    FOREIGN KEY (question_id) REFERENCES questions(question_id)
+);
+
+
